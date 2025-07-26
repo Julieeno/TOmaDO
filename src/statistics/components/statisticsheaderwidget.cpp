@@ -21,6 +21,7 @@ StatisticsHeaderWidget::StatisticsHeaderWidget(QWidget* parent)
     , m_currentTimeRange("daily")
     , m_currentReferenceDate(QDate::currentDate())
 {
+    QLocale::setDefault(QLocale(QLocale::English));
     setupUi();
     setupTimeRangeMenu();
     connectSignals();
@@ -341,20 +342,27 @@ void StatisticsHeaderWidget::updateNavigationButtons()
 
 void StatisticsHeaderWidget::updatePeriodLabel()
 {
-    m_periodLabel->setText(getPeriodDisplayName(m_currentTimeRange, m_currentReferenceDate));
+    QLocale locale(QLocale::English);
+
+    QString periodText = getPeriodDisplayName(m_currentTimeRange, m_currentReferenceDate);
+    m_periodLabel->setText(periodText);
 }
 
 QString StatisticsHeaderWidget::getPeriodDisplayName(const QString& rangeType, const QDate& referenceDate) const
 {
+    QLocale locale(QLocale::English);
+
     if (rangeType == "daily") {
-        return referenceDate.toString("dddd, MMMM d, yyyy");
+        return locale.toString(referenceDate, "MMMM d, yyyy");
     } else if (rangeType == "weekly") {
-        QDate startDate = getPeriodStartDate(rangeType, referenceDate);
-        QDate endDate = getPeriodEndDate(rangeType, referenceDate);
-        return QString("Week of %1 - %2").arg(startDate.toString("MMM d")).arg(endDate.toString("MMM d, yyyy"));
+        QDate weekStart = getPeriodStartDate(rangeType, referenceDate);
+        QDate weekEnd = getPeriodEndDate(rangeType, referenceDate);
+        return locale.toString(weekStart, "MMM d") + " - " +
+               locale.toString(weekEnd, "MMM d, yyyy");
     } else if (rangeType == "monthly") {
-        return referenceDate.toString("MMMM yyyy");
+        return locale.toString(referenceDate, "MMMM yyyy");
     }
+
     return "";
 }
 

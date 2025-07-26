@@ -5,6 +5,12 @@
 #include <QSqlError>
 #include <QDebug>
 
+#ifdef NDEBUG
+    const QString DB_PATH = QString("%1/share/tomado/db/tomado.db").arg(QCoreApplication::applicationDirPath());
+#else
+const QString DB_PATH = "db/tomado.db";
+#endif
+
 DatabaseConnectionManager& DatabaseConnectionManager::instance()
 {
     static DatabaseConnectionManager instance;
@@ -39,13 +45,23 @@ bool DatabaseConnectionManager::initialize()
 
 bool DatabaseConnectionManager::setupDatabase()
 {
+#ifdef NDEBUG
+    // Release mode - use installed database path
     QString dbDir = QDir::homePath() + "/.local/share/tomado/db";
     QDir dir(dbDir);
     if (!dir.exists()) {
         dir.mkpath(".");
     }
-
     QString dbFilePath = dbDir + "/tomado.db";
+#else
+    // Debug mode - use local project database path
+    QString dbFilePath = DB_PATH;
+    QDir dir(QFileInfo(dbFilePath).absolutePath());
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+#endif
+
     m_database.setDatabaseName(dbFilePath);
     
     if (!m_database.open()) {
@@ -72,7 +88,11 @@ bool DatabaseConnectionManager::createDatabaseDirectory()
 
 QString DatabaseConnectionManager::getDatabasePath() const
 {
+#ifdef NDEBUG
     return QDir::homePath() + "/.local/share/tomado/db/tomado.db";
+#else
+    return DB_PATH;
+#endif
 }
 
 bool DatabaseConnectionManager::beginTransaction()

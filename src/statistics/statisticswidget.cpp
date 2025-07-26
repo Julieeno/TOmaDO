@@ -221,43 +221,36 @@ void StatisticsVerticalBarWidget::paintEvent(QPaintEvent* event) {
         painter.drawText(totalTimeRect, Qt::AlignCenter, totalText);
     }
 
-    // Draw bar background (always draw this for visual consistency)
+    // Draw bar background
     painter.setPen(QPen(QColor("#e0e0e0"), 1));
     painter.setBrush(QBrush(QColor("#f8f9fa")));
     painter.drawRoundedRect(barRect, 4, 4);
 
     // Only draw segments if we have data
     if (m_segments.isEmpty() || totalHours <= 0) {
-        // For empty bars, just return after drawing the background and label
         return;
     }
 
-    // Use logarithmic or square root scaling to make small values more visible
-    // while still maintaining relative proportions between bars
-    double scaledTotalHours = sqrt(totalHours); // Square root scaling
+    double scaledTotalHours = sqrt(totalHours);
     double scaledMaxHours = sqrt(m_maxHours);
 
-    // Calculate the total height this bar should occupy
     double barFillRatio = scaledTotalHours / scaledMaxHours;
     double usedBarHeight = barFillRatio * barRect.height();
 
-    // Draw segments proportionally within the used bar height
     double currentY = barRect.bottom();
 
     for (const auto& segment : m_segments) {
         if (segment.hours <= 0) continue;
 
-        // Calculate segment height as proportion of total time for this bar
         double proportion = segment.hours / totalHours;
         double segmentHeight = proportion * usedBarHeight;
-        segmentHeight = qMax(segmentHeight, 3.0); // Minimum visible height
+        segmentHeight = qMax(segmentHeight, 3.0);
 
         QRect segmentRect(barRect.left(),
                          currentY - segmentHeight,
                          barRect.width(),
                          segmentHeight);
 
-        // Draw segment with clean colors
         painter.setPen(QPen(segment.color.darker(110), 1));
         painter.setBrush(QBrush(segment.color));
         painter.drawRoundedRect(segmentRect, 2, 2);
@@ -292,7 +285,6 @@ QSize StatisticsVerticalBarWidget::sizeHint() const {
 }
 
 int StatisticsVerticalBarWidget::getSegmentIndexAtPosition(const QPoint& pos) const {
-    // Implementation for finding which segment was clicked
     QRect rect = this->rect().adjusted(MARGIN, MARGIN, -MARGIN, -MARGIN);
     QRect barArea(rect.left() + 10, rect.top() + 10,
                   BAR_WIDTH - 20, rect.height() - LABEL_HEIGHT - 20);
@@ -301,7 +293,6 @@ int StatisticsVerticalBarWidget::getSegmentIndexAtPosition(const QPoint& pos) co
         return -1;
     }
 
-    // Calculate which segment was clicked based on Y position
     int relativeY = barArea.bottom() - pos.y();
     double ratio = static_cast<double>(relativeY) / barArea.height();
     double currentRatio = 0;
@@ -325,7 +316,6 @@ StatisticsWidget::StatisticsWidget(QWidget* parent) : QWidget(parent) {
 }
 
 void StatisticsWidget::setupUi() {
-    // Apply main widget background gradient to match the app theme
     setStyleSheet(
         "StatisticsWidget {"
         "   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"

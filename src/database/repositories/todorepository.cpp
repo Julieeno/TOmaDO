@@ -32,10 +32,7 @@ bool TodoRepository::update(const DatabaseManager::TodoItem& todo)
     QSqlQuery query(m_database);
     query.prepare("UPDATE todos SET goal_id = ?, title = ?, description = ?, "
                  "is_completed = ?, priority = ?, color_code = ?, start_date = ?, end_date = ? WHERE id = ?");
-    
-    if (!bindTodoToQuery(query, todo)) {
-        return false;
-    }
+
     query.addBindValue(todo.id);
     
     if (!query.exec()) {

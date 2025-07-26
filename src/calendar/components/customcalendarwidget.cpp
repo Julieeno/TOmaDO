@@ -4,6 +4,7 @@
 #include "calendar/components/calendarcellrenderer.h"
 #include <QPainter>
 #include <QMouseEvent>
+#include <QDebug>
 
 CustomCalendarWidget::CustomCalendarWidget(QWidget* parent)
     : QCalendarWidget(parent)
@@ -61,10 +62,8 @@ bool CustomCalendarWidget::hasContentForDate(const QDate& date) const
 
 void CustomCalendarWidget::paintCell(QPainter* painter, const QRect& rect, QDate date) const
 {
-    // First paint the default calendar cell
     QCalendarWidget::paintCell(painter, rect, date);
 
-    // Then add our custom content if available
     if (hasContentForDate(date)) {
         QList<GoalTimeInfo> goals = m_dateGoalActivities.value(date);
         QList<TodoInfo> todos = m_dateTodos.value(date);
@@ -75,12 +74,9 @@ void CustomCalendarWidget::paintCell(QPainter* painter, const QRect& rect, QDate
 
 void CustomCalendarWidget::mousePressEvent(QMouseEvent* event)
 {
-    // Try to handle the event with our interaction handler first
     if (m_interactionHandler && m_interactionHandler->handleMousePress(event)) {
-        return; // Event was handled
+        return;
     }
-
-    // Fall back to default behavior
     QCalendarWidget::mousePressEvent(event);
 }
 

@@ -20,7 +20,6 @@ bool DatabaseSchemaManager::verifySchema(QSqlDatabase& db)
 {
     QSqlQuery query(db);
     
-    // Check if all required tables exist
     query.exec("SELECT name FROM sqlite_master WHERE type='table'");
     QStringList existingTables;
     
