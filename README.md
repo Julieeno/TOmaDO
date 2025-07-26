@@ -1,7 +1,7 @@
 ## TOmaDO - Task and Time Management Application
 **TOmaDO** is a simple, Linux-friendly alternative to the popular [Focus To-Do](https://www.focustodo.cn/) app. 
 It was created to fill a small but real gap for Linux users who need a straightforward tool for task and time management.
-Try it by yourself downloading it from [here]().
+Try it by yourself downloading it from [here](https://github.com/Julieeno/TOmaDO/blob/main/tomado_1.0.0_amd64.deb).
 
 ### Motivation
 I built TOmaDO because I was a regular user of Focus To-Do, which unfortunately isn’t available on Linux. 
