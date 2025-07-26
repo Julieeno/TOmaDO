@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=TOmaDO
+Comment=Task and Time Management Application
+Exec=@CMAKE_INSTALL_PREFIX@/bin/TOmaDO
+Icon=TOmaDO
+Categories=Utility;Office;
