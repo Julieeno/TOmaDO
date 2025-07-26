@@ -55,6 +55,7 @@ Toggle this mode when you need to deeply concentrate on a single task.*
 - - Header files `include/`
 
 ### Installation
+
 #### Using the DEB package
 ```sudo dpkg -i tomado_x.x.x_amd64.deb```
 
